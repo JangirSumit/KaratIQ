@@ -24,7 +24,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '9.0.x'
 
     - name: Install MAUI Workload
       run: dotnet workload install maui
@@ -44,10 +44,10 @@ jobs:
 
     - name: Build and Publish Signed Android APK
       run: |
-        dotnet publish -c Release -f net8.0-android -p:AndroidSdkDirectory=$env:ANDROID_SDK_ROOT -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=karatiq.keystore -p:AndroidSigningKeyAlias=karatiq -p:AndroidSigningKeyPass=karatiq123 -p:AndroidSigningStorePass=karatiq123
+        dotnet publish -c Release -f net9.0-android -p:AndroidSdkDirectory=$env:ANDROID_SDK_ROOT -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=karatiq.keystore -p:AndroidSigningKeyAlias=karatiq -p:AndroidSigningKeyPass=karatiq123 -p:AndroidSigningStorePass=karatiq123
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: KaratIQ Jewellery App
-        path: KaratIQ/bin/Release/net8.0-android/publish/*.apk
+        path: KaratIQ/bin/Release/net9.0-android/publish/*.apk
