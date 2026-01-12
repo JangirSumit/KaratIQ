@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="KaratIQ.Views.InventoryPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:KaratIQ.ViewModels"
+             xmlns:models="clr-namespace:KaratIQ.Models"
+             Title="Inventory Management">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        
+        <!-- Search Bar -->
+        <SearchBar Grid.Row="0" 
+                   Placeholder="Search items..."
+                   Text="{Binding SearchText}"
+                   SearchCommand="{Binding SearchCommand}"
+                   Margin="10" />
+
+        <!-- Items List -->
+        <CollectionView Grid.Row="1" 
+                        ItemsSource="{Binding Items}"
+                        SelectedItem="{Binding SelectedItem}"
+                        Margin="10,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:JewelleryItem">
+                    <Grid ColumnDefinitions="*,Auto" 
+                          Padding="15"
+                          BackgroundColor="LightGray"
+                          Margin="0,5">
+                        <StackLayout Grid.Column="0">
+                            <Label Text="{Binding Name}" 
+                                   FontSize="16" 
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding Category, StringFormat='Category: {0}'}" />
+                            <Label Text="{Binding MetalType, StringFormat='Metal: {0}'}" />
+                            <Label Text="{Binding Purity, StringFormat='Purity: {0}'}" />
+                            <Label Text="{Binding NetWeight, StringFormat='Weight: {0:F2}g'}" />
+                            <Label Text="{Binding Quantity, StringFormat='Qty: {0}'}" />
+                        </StackLayout>
+                        <Button Grid.Column="1"
+                                Text="Delete"
+                                BackgroundColor="Red"
+                                TextColor="White"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:InventoryViewModel}}, Path=DeleteItemCommand}"
+                                CommandParameter="{Binding .}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Add/Edit Form -->
+        <ScrollView Grid.Row="2" 
+                    BackgroundColor="White"
+                    Padding="15">
+            <StackLayout Spacing="10">
+                <Label Text="Add/Edit Item" 
+                       FontSize="18" 
+                       FontAttributes="Bold" />
+                
+                <Entry Placeholder="Item Name" 
+                       Text="{Binding SelectedItem.Name}" />
+                
+                <Picker Title="Category" 
+                        ItemsSource="{Binding Categories}"
+                        SelectedItem="{Binding SelectedItem.Category}" />
+                
+                <Picker Title="Metal Type" 
+                        ItemsSource="{Binding MetalTypes}"
+                        SelectedItem="{Binding SelectedItem.MetalType}" />
+                
+                <Picker Title="Purity" 
+                        ItemsSource="{Binding Purities}"
+                        SelectedItem="{Binding SelectedItem.Purity}" />
+                
+                <Entry Placeholder="Gross Weight (g)" 
+                       Text="{Binding SelectedItem.GrossWeight}"
+                       Keyboard="Numeric" />
+                
+                <Entry Placeholder="Net Weight (g)" 
+                       Text="{Binding SelectedItem.NetWeight}"
+                       Keyboard="Numeric" />
+                
+                <Entry Placeholder="Stone Weight (g)" 
+                       Text="{Binding SelectedItem.StoneWeight}"
+                       Keyboard="Numeric" />
+                
+                <Entry Placeholder="Making Charges" 
+                       Text="{Binding SelectedItem.MakingCharges}"
+                       Keyboard="Numeric" />
+                
+                <Entry Placeholder="Wastage %" 
+                       Text="{Binding SelectedItem.WastagePercentage}"
+                       Keyboard="Numeric" />
+                
+                <Entry Placeholder="Quantity" 
+                       Text="{Binding SelectedItem.Quantity}"
+                       Keyboard="Numeric" />
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                            Text="Save Item"
+                            BackgroundColor="Green"
+                            TextColor="White"
+                            Command="{Binding SaveItemCommand}" />
+                    
+                    <Button Grid.Column="1"
+                            Text="New Item"
+                            BackgroundColor="Blue"
+                            TextColor="White"
+                            Command="{Binding NewItemCommand}" />
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

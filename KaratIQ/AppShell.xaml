@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="KaratIQ.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:KaratIQ.Views"
+    Shell.FlyoutBehavior="Flyout"
+    Title="KaratIQ">
+
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="#2196F3" HeightRequest="150">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                <Label Text="💎 KaratIQ" 
+                       FontSize="24" 
+                       FontAttributes="Bold" 
+                       TextColor="White" />
+                <Label Text="Jewellery Management" 
+                       FontSize="14" 
+                       TextColor="White" />
+            </StackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Inventory" Icon="inventory.png">
+        <ShellContent Route="inventory" ContentTemplate="{DataTemplate local:InventoryPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Billing" Icon="billing.png">
+        <ShellContent Route="billing" ContentTemplate="{DataTemplate local:BillingPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Customers" Icon="customers.png">
+        <ShellContent Route="customers" ContentTemplate="{DataTemplate local:CustomersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Orders" Icon="orders.png">
+        <ShellContent Route="orders" ContentTemplate="{DataTemplate local:OrdersPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Reports" Icon="reports.png">
+        <ShellContent Route="reports" ContentTemplate="{DataTemplate local:ReportsPage}" />
+    </FlyoutItem>
+
+</Shell>

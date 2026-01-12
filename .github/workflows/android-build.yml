@@ -1,0 +1,53 @@
+name: Build KaratIQ
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'KaratIQ/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'KaratIQ/**'
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./KaratIQ
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install MAUI Workload
+      run: dotnet workload install maui
+
+    - name: Generate Keystore
+      run: |
+        keytool -genkey -v -keystore karatiq.keystore -alias karatiq -keyalg RSA -keysize 2048 -validity 10000 -storepass karatiq123 -keypass karatiq123 -dname "CN=KaratIQ, OU=Development, O=KaratIQ Apps, L=City, S=State, C=IN"
+
+    - name: Set Version
+      run: |
+        $version = $env:GITHUB_RUN_NUMBER
+        $displayVersion = "1.$version"
+        (Get-Content KaratIQ.csproj) -replace '<ApplicationDisplayVersion>.*</ApplicationDisplayVersion>', "<ApplicationDisplayVersion>$displayVersion</ApplicationDisplayVersion>" -replace '<ApplicationVersion>.*</ApplicationVersion>', "<ApplicationVersion>$version</ApplicationVersion>" | Set-Content KaratIQ.csproj
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build and Publish Signed Android APK
+      run: |
+        dotnet publish -c Release -f net8.0-android -p:AndroidSdkDirectory=$env:ANDROID_SDK_ROOT -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=karatiq.keystore -p:AndroidSigningKeyAlias=karatiq -p:AndroidSigningKeyPass=karatiq123 -p:AndroidSigningStorePass=karatiq123
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: KaratIQ Jewellery App
+        path: KaratIQ/bin/Release/net8.0-android/publish/*.apk
